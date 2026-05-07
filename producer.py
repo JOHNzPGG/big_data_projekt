@@ -48,7 +48,8 @@ def start_server():
                             "is_bot": data['bot'],
                             "title": data['title'],
                             "length_diff": data.get('length', {}).get('new', 0) - data.get('length', {}).get('old', 0),
-                            "comment": data.get('comment', 'Brak komentarza')  # <-- DODANO KOMENTARZ
+                            "comment": data.get('comment', 'Brak komentarza'),
+                            "revision_id": data.get('revision', {}).get('new', 0)  # <-- DODANO: Unikalne ID edycji
                         }
 
                         # WYSYŁKA DO KAFKI

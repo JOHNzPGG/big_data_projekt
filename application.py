@@ -40,7 +40,8 @@ json_schema = StructType([
     StructField("is_bot", BooleanType(), True),
     StructField("title", StringType(), True),
     StructField("length_diff", IntegerType(), True),
-    StructField("comment", StringType(), True) # <-- DODANO
+    StructField("comment", StringType(), True),
+    StructField("revision_id", IntegerType(), True) # <-- DODANO
 ])
 
 # SESJA SPARK - Dodano więcej pamięci dla stabilności na Windowsie
@@ -94,8 +95,9 @@ def process_batch(df, epoch_id):
             col("title"),
             col("total_edits"),
             col("unique_users"),
-            col("combatants"),  # <-- DODANO
-            col("latest_comment")  # <-- DODANO
+            col("combatants"),
+            col("latest_comment"),
+            col("latest_revision")  # <-- DODANO
         ).orderBy(col("total_edits").desc())
 
         print("  Zapis wyników w tle...")
@@ -138,10 +140,9 @@ def start_app():
         .agg(
             count("user").alias("total_edits"),
             approx_count_distinct("user").alias("unique_users"),
-            # Zbieramy unikalnych użytkowników do jednego stringa po przecinku:
             concat_ws(", ", collect_set("user")).alias("combatants"),
-            # Bierzemy najnowszy komentarz do edycji z tego okna:
-            last("comment").alias("latest_comment")
+            last("comment").alias("latest_comment"),
+            last("revision_id").alias("latest_revision")  # <-- DODANO
         )
         # Próg alertu: min. 4 edycje OD MINIMUM 2 RÓŻNYCH UŻYTKOWNIKÓW (żeby wykluczyć pojedyncze boty)
         .filter((col("total_edits") >= 4) & (col("unique_users") > 1))

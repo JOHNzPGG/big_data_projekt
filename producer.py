@@ -47,7 +47,8 @@ def start_server():
                             "user": data['user'],
                             "is_bot": data['bot'],
                             "title": data['title'],
-                            "length_diff": data['length']['new'] - data['length']['old']
+                            "length_diff": data.get('length', {}).get('new', 0) - data.get('length', {}).get('old', 0),
+                            "comment": data.get('comment', 'Brak komentarza')  # <-- DODANO KOMENTARZ
                         }
 
                         # WYSYŁKA DO KAFKI

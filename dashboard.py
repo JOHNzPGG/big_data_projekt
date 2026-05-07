@@ -70,26 +70,38 @@ else:
 
     with col_left:
         st.subheader("🔥 Najgorętsze artykuły (Bieżące okno)")
-        # Przygotowanie ładnej tabeli dla najnowszej partii danych
-        display_df = latest_data[['title', 'total_edits', 'unique_users', 'start_time']].copy()
+
+        # Pobieramy teraz nowe kolumny z wrogami i komentarzem
+        display_df = latest_data[
+            ['title', 'total_edits', 'unique_users', 'combatants', 'latest_comment', 'start_time']].copy()
+
+        display_df['url'] = "https://en.wikipedia.org/wiki/" + display_df['title'].str.replace(' ', '_')
+
         display_df.rename(columns={
             'title': 'Tytuł Artykułu',
             'total_edits': 'Liczba Edycji',
-            'unique_users': 'Konta Użytkowników',
-            'start_time': 'Początek okna'
+            'unique_users': 'Konta',
+            'combatants': 'Walczący (Kto)',  # <-- NOWE
+            'latest_comment': 'Ostatni powód (O co)',  # <-- NOWE
+            'start_time': 'Początek okna',
+            'url': 'Link'
         }, inplace=True)
 
-        # ZMIANA: Resetujemy numeryczny indeks zamiast ustawiać tytuł jako indeks
         display_df.reset_index(drop=True, inplace=True)
-
         if display_df.empty:
             st.success("W obecnym oknie czasowym panuje spokój. Brak wojen edycyjnych.")
         else:
-            # Kolorujemy kolumnę z liczbą edycji na czerwono i ukrywamy indeks
+            # Używamy st.column_config do sformatowania kolumny 'Link'
             st.dataframe(
                 display_df.style.background_gradient(cmap='Reds', subset=['Liczba Edycji']),
                 use_container_width=True,
-                hide_index=True  # Ta flaga ukrywa numeryczne (0, 1, 2...) wartości po lewej
+                hide_index=True,
+                column_config={
+                    "Link": st.column_config.LinkColumn(
+                        "Adres URL",
+                        display_text="🔗 Otwórz Wiki"  # Tekst wyświetlany zamiast długiego linku
+                    )
+                }
             )
 
     with col_right:

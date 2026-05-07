@@ -29,8 +29,15 @@ def load_data():
 
     if dfs:
         df = pd.concat(dfs, ignore_index=True)
-        df['start_time'] = pd.to_datetime(df['start_time'])
-        df['end_time'] = pd.to_datetime(df['end_time'])
+
+        # ZMIANA: Parametr errors='coerce' sprawi, że Pandas zamiast crashować,
+        # zamieni błędne wartości (jak "Q116...") na puste pole NaT (Not a Time).
+        df['start_time'] = pd.to_datetime(df['start_time'], errors='coerce')
+        df['end_time'] = pd.to_datetime(df['end_time'], errors='coerce')
+
+        # TARCZA: Usuwamy z tabeli wszystkie zepsute, przesunięte wiersze
+        df = df.dropna(subset=['start_time', 'end_time']).copy()
+
         return df
 
     return pd.DataFrame()

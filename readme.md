@@ -24,3 +24,12 @@ Sortowanie: Pozwala filtrować konflikty (np. z ostatnich 15 minut, godziny lub 
 KPI i Trend: Live-wykres pokazujący natężenie ruchu i kłótni na serwerach w postaci fali.
 
 Moduł Detektywistyczny: Generuje specjalne, dynamiczne linki (diff), w które wystarczy kliknąć, by zobaczyć na własne oczy dwukolumnowe porównanie w kodzie HTML – czyli co dokładnie dany bot lub użytkownik usunął, a co dopisał.
+
+Odpalanie projektu:
+
+producer.py
+application.py
+
+działają niezależnie od dashbordu który można włączyć odzielnie z terminala poleceniem:
+
+streamlit run dashboard.py

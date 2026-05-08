@@ -5,9 +5,9 @@ import os
 import time
 
 # 1. Konfiguracja wyglądu strony
-st.set_page_config(page_title="Wiki Edit Wars Monitor", page_icon="🔴", layout="wide")
+st.set_page_config(page_title="Wiki Edit Wars Monitor", page_icon="W", layout="wide")
 
-st.title("🔴 Wikipedia Live Edit Wars Monitor")
+st.title("Wikipedia Live Edit Wars Monitor")
 st.markdown("Dashboard śledzący masowe edycje i konflikty na Wikipedii w czasie rzeczywistym.")
 
 OUTPUT_DIR = "output_stats_history"
@@ -46,16 +46,16 @@ def load_data():
 df = load_data()
 
 # 3. Panel boczny (Sidebar) - WEHIKUŁ CZASU
-st.sidebar.header("⚙️ Ustawienia i Filtry")
+st.sidebar.header("Ustawienia i Filtry")
 auto_refresh = st.sidebar.toggle("Odświeżanie Live (co 10s)", value=True)
 st.sidebar.markdown("---")
 
 if df.empty:
-    st.info("⏳ Oczekiwanie na dane ze Sparka. (Pamiętaj, pierwsze okno zamyka się po 5 minutach!)")
+    st.info("Oczekiwanie na dane ze Sparka. (Pamiętaj, pierwsze okno zamyka się po 5 minutach!)")
 else:
     # WIDŻET: Wybór zakresu czasu
     time_filter = st.sidebar.radio(
-        "🕰️ Pokaż konflikty z:",
+        "Pokaż konflikty z:",
         ["Ostatnie 15 minut", "Ostatnia godzina", "Cała historia sesji"]
     )
 
@@ -75,16 +75,16 @@ else:
 
     # 4. Główne wskaźniki (KPI)
     col1, col2, col3 = st.columns(3)
-    col1.metric("📦 Zbadane mikro-partie (Batche)", df['batch_id'].nunique())
-    col2.metric(f"🔥 Unikalne konflikty ({time_filter.lower()})", len(dedup_df))
-    col3.metric("📊 Łączna liczba zdarzeń (surowych)", len(filtered_df))
+    col1.metric("Zbadane mikro-partie (Batche)", df['batch_id'].nunique())
+    col2.metric(f"Unikalne konflikty ({time_filter.lower()})", len(dedup_df))
+    col3.metric("Łączna liczba zdarzeń (surowych)", len(filtered_df))
 
     st.divider()
 
     col_left, col_right = st.columns([1.2, 1])
 
     with col_left:
-        st.subheader(f"🔥 Najgorętsze artykuły ({time_filter})")
+        st.subheader(f"Najgorętsze artykuły ({time_filter})")
 
         # Przygotowanie tabeli ze zdeduplikowanych danych
         display_df = dedup_df[['title', 'total_edits', 'unique_users', 'combatants', 'latest_comment', 'start_time',
